@@ -1,0 +1,7 @@
+{
+    "@@locale": "fr",
+    "appTitle": "Peristock",
+    "@appTitle": {
+        "description": "Nom de l'application"
+    }
+}
