@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:peristock/adapters/dtos/product.dart';
 import 'package:peristock/adapters/openapi_repository.dart';
 import 'package:peristock/adapters/paginator.dart';
 import 'package:peristock/domain/domain.dart';
@@ -12,9 +13,9 @@ class SupabaseProductRepository extends OpenFoodFactsRepository implements Produ
 
   final SupabaseClient _supabaseClient;
 
-  static const String _table = 'Product';
+  static const String _table = 'product';
 
-  static const String _bucket = 'uploads';
+  static const String _bucket = 'thumbnails';
 
   @override
   Future<Collection<Product>> findCollection({required int page, required int itemsPerPage}) async {
@@ -32,7 +33,9 @@ class SupabaseProductRepository extends OpenFoodFactsRepository implements Produ
       }
 
       return Collection(
-        items: [for (final item in response.data as List<dynamic>) ProductCodec.fromJson(item as Map<String, dynamic>)],
+        items: [
+          for (final item in response.data as List<dynamic>) SupabseProduct.fromJson(item as Json).toDomain(),
+        ],
         totalItems: response.count!,
       );
     } catch (error) {
@@ -55,13 +58,20 @@ class SupabaseProductRepository extends OpenFoodFactsRepository implements Produ
       throw Exception('Product not found'); // todo
     }
 
-    return ProductCodec.fromJson(json.first as Map<String, dynamic>);
+    return SupabseProduct.fromJson(json.first as Json).toDomain();
   }
 
   @override
   Future<void> saveProduct({required ProductSnapshot value}) async {
     try {
-      final response = await _supabaseClient.from(_table).upsert(ProductCodec.toJson(value)).execute();
+      final response = await _supabaseClient.from(_table).upsert({
+        if (value.id != null) 'id': value.id,
+        'name': value.name,
+        'best_before_date': value.bestBeforeDate?.toIso8601String(),
+        'image': value.image,
+        'quantity': value.quantity,
+        'quantity_type': value.quantityType.name,
+      }).execute();
 
       if (response.hasError) {
         throw SaveProductFailure(response.error!.message);
@@ -89,26 +99,5 @@ class SupabaseProductRepository extends OpenFoodFactsRepository implements Produ
     }
 
     return storage.getPublicUrl(path).data!;
-  }
-}
-
-abstract class ProductCodec {
-  static Product fromJson(Map<String, dynamic> json) {
-    return Product.fromJson(
-      json
-        ..['bestBeforeDate'] = json['best_before_date']
-        ..['quantityType'] = json['quantity_type'],
-    );
-  }
-
-  static Map<String, dynamic> toJson(ProductSnapshot instance) {
-    return {
-      if (instance.id != null) 'id': instance.id,
-      'name': instance.name,
-      'best_before_date': instance.bestBeforeDate?.toIso8601String(),
-      'image': instance.image,
-      'quantity': instance.quantity,
-      'quantity_type': instance.quantityType.name,
-    };
   }
 }
