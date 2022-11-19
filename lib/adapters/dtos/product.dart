@@ -17,7 +17,7 @@ class SupabseProduct with _$SupabseProduct {
     String? image_url,
   }) = _SupabseProduct;
 
-  SupabseProduct._();
+  const SupabseProduct._();
 
   factory SupabseProduct.fromJson(Map<String, dynamic> json) => _$SupabseProductFromJson(json);
 
