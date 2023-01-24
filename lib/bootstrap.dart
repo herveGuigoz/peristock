@@ -2,20 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
-  FlutterError.onError = (details) {
-    log(details.exceptionAsString(), stackTrace: details.stack);
-  };
-
-  await runZonedGuarded(
-    () async => runApp(
-      ProviderScope(observers: [AppObserver()], child: await builder()),
-    ),
-    (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
-  );
-}
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:peristock/adapters/supabase/supabase.dart';
 
 class AppObserver extends ProviderObserver {
   @override
@@ -51,4 +39,19 @@ class AppObserver extends ProviderObserver {
   void didDisposeProvider(ProviderBase<Object?> provider, ProviderContainer container) {
     if (provider.name != null) log('didDisposeProvider', name: '${provider.name}');
   }
+}
+
+Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
+  FlutterError.onError = (details) {
+    log(details.exceptionAsString(), stackTrace: details.stack);
+  };
+
+  await SupabaseRepository.initialize();
+
+  await runZonedGuarded(
+    () async => runApp(
+      ProviderScope(observers: [AppObserver()], child: await builder()),
+    ),
+    (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
+  );
 }

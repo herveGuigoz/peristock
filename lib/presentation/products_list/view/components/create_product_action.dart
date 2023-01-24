@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:peristock/application/theme/theme.dart';
 import 'package:peristock/presentation/products_details/presenter/product.dart';
+import 'package:peristock/presentation/shared/theme/theme.dart';
 
 enum CreateProductAction { scan, manual }
 

@@ -10,7 +10,7 @@ part 'notifier.dart';
 part 'state.dart';
 
 typedef ProductProvider = Provider<Product?>;
-typedef ProductFormNotifierProvider = AutoDisposeStateNotifierProvider<_ProductFormNotifier, ProductForm>;
+typedef ProductFormNotifierProvider = AutoDisposeNotifierProvider<_ProductFormNotifier, ProductForm>;
 
 abstract class ProductFormPresenter {
   static ProductProvider get product => _productProvider;
@@ -24,15 +24,7 @@ final _productProvider = ProductProvider(
 );
 
 final _productForm = ProductFormNotifierProvider(
-  (ref) {
-    final snapshot = ref.watch(_productProvider);
-
-    if (snapshot != null) {
-      return _ProductFormNotifier.fromProduct(ref.read, product: snapshot);
-    }
-
-    return _ProductFormNotifier(ref.read);
-  },
+  _ProductFormNotifier.new,
   dependencies: [_productProvider, Dependency.productRepository],
   name: 'ProductFormNotifierProvider',
 );

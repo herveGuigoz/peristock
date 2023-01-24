@@ -13,7 +13,7 @@ class ProductForm extends Equatable with FormMixin {
       : status = const FormStatus.initial(),
         name = ProductName.initial(product.name),
         beforeDate = BestBeforeDate.initial(product.bestBeforeDate),
-        quantity = Quantity.initial(product.quantity, product.quantityType),
+        quantity = Quantity.initial(product.quantity),
         image = product.thumbnail;
 
   ProductForm.empty()
@@ -54,9 +54,9 @@ class ProductForm extends Equatable with FormMixin {
   ProductSnapshot toSnapshot() {
     return ProductSnapshot(
       name: name.value,
-      bestBeforeDate: beforeDate.value,
+      // bestBeforeDate: beforeDate.value,
       quantity: quantity.value,
-      quantityType: quantity.type,
+      // quantityType: quantity.type,
       image: image?.whenOrNull(network: (path) => path),
     );
   }
@@ -93,12 +93,10 @@ class BestBeforeDate extends FormInput<DateTime> {
 }
 
 class Quantity extends FormInput<int> with EquatableMixin {
-  const Quantity(super.value, [this.type = QuantityType.qt]);
+  const Quantity(super.value);
 
-  const Quantity.initial([super.value = 1, this.type = QuantityType.qt])
+  const Quantity.initial([super.value = 1])
       : super.initial();
-
-  final QuantityType type;
 
   @override
   String? validator(int value) {
@@ -106,12 +104,12 @@ class Quantity extends FormInput<int> with EquatableMixin {
     return null;
   }
 
-  Quantity copyWith({int? value, QuantityType? type}) {
-    return Quantity(value ?? this.value, type ?? this.type);
+  Quantity copyWith({int? value}) {
+    return Quantity(value ?? this.value);
   }
 
   @override
-  List<Object?> get props => [value, type];
+  List<Object?> get props => [value];
 }
 
 abstract class Thumbnail extends FormInput<String> {

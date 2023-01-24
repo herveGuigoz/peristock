@@ -3,9 +3,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:peristock/application/navigation/navigation.dart';
-import 'package:peristock/application/theme/theme.dart';
 import 'package:peristock/l10n.dart';
 import 'package:peristock/presentation/app/presenter/presenter.dart';
+import 'package:peristock/presentation/shared/theme/theme.dart';
 
 class App extends ConsumerStatefulWidget {
   const App({super.key});
@@ -45,12 +45,12 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
-    final theme = ref.watch(themeProvider);
+    final theme = ref.watch(themeDataProvider);
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       onGenerateTitle: (context) => context.l10n.appTitle,
-      theme: theme.material,
+      theme: theme,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

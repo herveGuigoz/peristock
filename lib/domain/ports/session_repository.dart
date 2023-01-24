@@ -1,15 +1,17 @@
-enum AuthStatus { authenticated, unAuthenticated }
+import 'dart:async';
+
+enum AuthStatus { authenticated, unauthenticated }
 
 abstract class SessionRepositoryInterface {
   /// Method to do sign in
-  Future<void> signIn({required String email, required bool isWeb});
+  FutureOr<void> signIn({required String email, required bool isWeb});
 
   /// Recover session from deep links.
-  Future<AuthStatus?> handleDeeplink(Uri uri);
+  FutureOr<AuthStatus> handleDeeplink(String path);
 
   /// Recover/refresh session if it's available.
-  Future<AuthStatus> recoverSession();
+  FutureOr<AuthStatus> recoverSession();
 
   /// Method to do sign out.
-  Future<void> signOut();
+  FutureOr<void> signOut();
 }

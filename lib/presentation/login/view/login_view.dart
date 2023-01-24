@@ -4,9 +4,9 @@ import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:peristock/application/theme/theme.dart';
 import 'package:peristock/presentation/login/presenter/presenter.dart' hide Email;
 import 'package:peristock/presentation/shared/shared.dart';
+import 'package:peristock/presentation/shared/theme/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LoginView extends ConsumerWidget {
@@ -18,10 +18,17 @@ class LoginView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
+    void onError(Object message) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$message'), backgroundColor: theme.colorScheme.errorContainer),
+      );
+    }
+
     ref.listen<LoginState>(LoginFormPresenter.state, (_, state) {
       state.status.mapOrNull(
         submissionInProgress: (_) => FocusManager.instance.primaryFocus?.unfocus(),
         submissionSucceed: (_) => SuccessModal.show(context),
+        submissionFailled: (value) => onError(value.error),
       );
     });
 

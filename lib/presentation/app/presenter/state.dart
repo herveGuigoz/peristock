@@ -2,7 +2,7 @@ part of 'notifier.dart';
 
 class AppState extends Equatable {
   const AppState({
-    this.status = AuthStatus.unAuthenticated,
+    this.status = AuthStatus.unauthenticated,
   });
 
   final AuthStatus status;

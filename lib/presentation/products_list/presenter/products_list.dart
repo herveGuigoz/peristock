@@ -55,7 +55,7 @@ final _productsCountProvider = ProductCountProvider(
 
     return collection.when(
       data: (value) => AsyncData(value.totalItems),
-      error: (error, stackTrace) => AsyncError(error, stackTrace: stackTrace),
+      error: AsyncError.new,
       loading: AsyncLoading.new,
     );
   },

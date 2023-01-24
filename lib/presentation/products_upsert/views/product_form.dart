@@ -1,13 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:peristock/application/theme/theme.dart';
-import 'package:peristock/domain/entities/entities.dart';
 import 'package:peristock/l10n.dart';
 import 'package:peristock/presentation/products_upsert/presenter/presenter.dart';
 import 'package:peristock/presentation/shared/shared.dart';
+import 'package:peristock/presentation/shared/theme/theme.dart';
 
 class ProductFormLayout extends ConsumerWidget {
   const ProductFormLayout({
@@ -71,7 +69,7 @@ class ProductPicture extends ConsumerWidget {
     return Picture(
       image: image?.value,
       decoration: BoxDecoration(
-        border: Border.all(color: Palette.gray200),
+        border: Border.all(color: theme.colorScheme.tertiary),
         borderRadius: BorderRadius.all(theme.radius.regular),
       ),
       fit: image?.whenOrNull(
@@ -122,6 +120,8 @@ class BestBeforeDateInput extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+
     final date = ref.watch(
       ProductFormPresenter.state.select((state) => state.beforeDate.value),
     );
@@ -133,8 +133,8 @@ class BestBeforeDateInput extends ConsumerWidget {
       child: Center(
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Palette.gray200,
-            foregroundColor: Palette.gray800,
+            backgroundColor: theme.colorScheme.onSecondary,
+            foregroundColor: theme.colorScheme.secondary,
           ),
           onPressed: () => showDatePicker(
             context: context,
@@ -160,43 +160,17 @@ class ProductQuantityInput extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-
-    final currentValue = ref.watch(
-      ProductFormPresenter.state.select((state) => state.quantity.type),
-    );
-
     final inputController = useTextController(
       create: () => '1',
       onChange: (input) => ref.read(ProductFormPresenter.state.notifier).setQuantity(int.parse(input)),
     );
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        TextField(
-          controller: inputController,
-          decoration: const InputDecoration(isDense: true),
-          enableSuggestions: false,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          keyboardType: TextInputType.number,
-        ),
-        Gap(theme.spacing.regular),
-        SizedBox(
-          width: double.infinity,
-          child: CupertinoSlidingSegmentedControl<QuantityType>(
-            children: {
-              for (final value in QuantityType.values) value: Text(value.name),
-            },
-            groupValue: currentValue,
-            onValueChanged: (QuantityType? qt) {
-              if (qt != null) {
-                ref.read(ProductFormPresenter.state.notifier).setQuantityType(qt);
-              }
-            },
-          ),
-        ),
-      ],
+    return TextField(
+      controller: inputController,
+      decoration: const InputDecoration(isDense: true),
+      enableSuggestions: false,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      keyboardType: TextInputType.number,
     );
   }
 }
@@ -225,7 +199,7 @@ class SubmitButton extends ConsumerWidget {
   }
 }
 
-class FormCard extends StatelessWidget {
+class FormCard extends ConsumerWidget {
   const FormCard({
     super.key,
     required this.title,
@@ -237,41 +211,33 @@ class FormCard extends StatelessWidget {
   final List<Widget> children;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: theme.spacing.small),
-          child: title,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.primary.withOpacity(.15),
+            offset: const Offset(4, 4),
+            blurRadius: 8,
+            spreadRadius: 2,
+          ), //BoxShadow
+        ],
+      ),
+      child: Material(
+        type: MaterialType.card,
+        shadowColor: Colors.teal,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(theme.radius.regular),
         ),
-        Gap(theme.spacing.small),
-        Container(
-          padding: EdgeInsets.all(theme.spacing.big),
-          decoration: BoxDecoration(
-            color: Palette.white,
-            borderRadius: BorderRadius.all(theme.radius.regular),
-            boxShadow: const [
-              BoxShadow(
-                color: Palette.gray200,
-                offset: Offset(4, 4),
-                blurRadius: 8,
-                spreadRadius: 2,
-              ), //BoxShadow
-            ],
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(theme.spacing.regular),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: children,
-            ),
+        child: Padding(
+          padding: EdgeInsets.all(theme.spacing.regular),
+          child: Column(
+            children: children,
           ),
         ),
-      ],
+      ),
     );
   }
 }

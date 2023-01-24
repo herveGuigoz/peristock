@@ -1,10 +1,10 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:peristock/adapters/products_repository.dart';
-import 'package:peristock/adapters/session_repository.dart';
-import 'package:peristock/adapters/user_repository.dart';
+import 'package:peristock/adapters/supabase/products.dart';
+import 'package:peristock/adapters/supabase/session.dart';
+import 'package:peristock/adapters/supabase/user.dart';
+
 import 'package:peristock/domain/domain.dart';
 import 'package:peristock/domain/ports/ports.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' show Supabase, SupabaseAuth;
 
 abstract class Dependency {
   static Provider<ProductRepositoryInterface> get productRepository => _productRepository;
@@ -15,16 +15,16 @@ abstract class Dependency {
 }
 
 final _productRepository = Provider<ProductRepositoryInterface>(
-  (ref) => SupabaseProductRepository(Supabase.instance.client),
+  (ref) => ProductRepository(),
   name: 'ProductRepositoryProvider',
 );
 
 final _authRepository = Provider<UserRepositoryInterface>(
-  (ref) => SupabaseUserRepository(Supabase.instance.client, SupabaseAuth.instance),
+  (ref) => UserRepository(),
   name: 'UserRepositoryProvider',
 );
 
 final _sessionRepository = Provider<SessionRepositoryInterface>(
-  (ref) => SupabaseSessionRepository(Supabase.instance.client.auth),
+  (ref) => SessionRepository(),
   name: 'SessionRepositoryProvider',
 );

@@ -25,8 +25,8 @@ class AppStateNotifier extends StateNotifier<AppState> with DeepLinkObserverMixi
 
   @override
   Future<void> handleDeeplink(Uri uri) async {
-    final status = await _sessionRepository.handleDeeplink(uri);
-    if (status != null) state = AppState(status: status);
+    final status = await _sessionRepository.handleDeeplink(uri.toString());
+    state = AppState(status: status);
   }
 
   @override

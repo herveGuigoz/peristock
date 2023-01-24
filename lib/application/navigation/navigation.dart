@@ -16,6 +16,7 @@ import 'package:peristock/presentation/products_upsert/views/product_create.dart
 import 'package:peristock/presentation/products_upsert/views/product_edit.dart';
 import 'package:peristock/presentation/settings/settings.dart';
 import 'package:peristock/presentation/shopping/views/shopping_list.dart';
+import 'package:peristock/presentation/trends/view/trends.dart';
 
 final routerProvider = Provider(
   (ref) => GoRouter(
@@ -40,7 +41,7 @@ final routerProvider = Provider(
         routes: [
           GoRoute(
             name: 'ProductList',
-            path: '/products',
+            path: ProductsListView.path,
             pageBuilder: (context, state) => FadeTransitionPage(
               key: state.pageKey,
               child: const ProductsListView(),
@@ -73,15 +74,23 @@ final routerProvider = Provider(
           ),
           GoRoute(
             name: 'ShoppingList',
-            path: '/shopping',
+            path: ShoppingListView.path,
             pageBuilder: (context, state) => FadeTransitionPage(
               key: state.pageKey,
               child: const ShoppingListView(),
             ),
           ),
           GoRoute(
+            name: 'Trends',
+            path: TrendsView.path,
+            pageBuilder: (context, state) => FadeTransitionPage(
+              key: state.pageKey,
+              child: const TrendsView(),
+            ),
+          ),
+          GoRoute(
             name: 'Settings',
-            path: '/settings',
+            path: SettingsView.path,
             pageBuilder: (context, state) => FadeTransitionPage(
               key: state.pageKey,
               child: const SettingsView(),
@@ -96,6 +105,10 @@ final routerProvider = Provider(
 
       if (!isAuthenticated && location != LoginView.path) {
         return LoginView.path;
+      }
+
+      if (isAuthenticated && location == LoginView.path) {
+        return '/products';
       }
 
       return null;

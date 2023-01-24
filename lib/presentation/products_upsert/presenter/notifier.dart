@@ -1,16 +1,18 @@
 part of 'presenter.dart';
 
-class _ProductFormNotifier extends StateNotifier<ProductForm> {
-  _ProductFormNotifier(this._read) : super(ProductForm.empty());
+class _ProductFormNotifier extends AutoDisposeNotifier<ProductForm> {
+  _ProductFormNotifier();
 
-  _ProductFormNotifier.fromProduct(
-    this._read, {
-    required Product product,
-  }) : super(ProductForm.fromProduct(product));
+  @override
+  ProductForm build() {
+    final product = ref.read(_productProvider);
+    if (product != null) {
+      return ProductForm.fromProduct(product);
+    }
+    return ProductForm.empty();
+  }
 
-  final Reader _read;
-
-  ProductRepositoryInterface get _productRepository => _read(Dependency.productRepository);
+  ProductRepositoryInterface get _productRepository => ref.read(Dependency.productRepository);
 
   Future<void> pickImage() async {
     final picker = ImagePicker();
@@ -32,9 +34,9 @@ class _ProductFormNotifier extends StateNotifier<ProductForm> {
     state = state.copyWith(quantity: state.quantity.copyWith(value: value));
   }
 
-  void setQuantityType(QuantityType value) {
-    state = state.copyWith(quantity: state.quantity.copyWith(type: value));
-  }
+  // void setQuantityType(QuantityType value) {
+  //   state = state.copyWith(quantity: state.quantity.copyWith(type: value));
+  // }
 
   void resetForm() {
     state = ProductForm.empty();
@@ -61,7 +63,7 @@ class _ProductFormNotifier extends StateNotifier<ProductForm> {
 
     return state.toSnapshot()
       ..copyWith(
-        id: _read(_productProvider)?.id,
+        id: ref.read(_productProvider)?.id,
         image: image,
       );
   }

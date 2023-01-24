@@ -3,6 +3,9 @@ abstract class AuthException implements Exception {
 
   /// The error which was caught.
   final Object error;
+
+  @override
+  String toString() => '$runtimeType($error)';
 }
 
 /// Thrown during the sign in process if a failure occurs.

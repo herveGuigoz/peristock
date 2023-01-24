@@ -5,6 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:peristock/presentation/products_list/view/products_list.dart';
 import 'package:peristock/presentation/settings/settings.dart';
 import 'package:peristock/presentation/shopping/views/shopping_list.dart';
+import 'package:peristock/presentation/trends/view/trends.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class Main extends ConsumerWidget {
   const Main({
@@ -17,6 +19,7 @@ class Main extends ConsumerWidget {
   static const destinations = <String>[
     ProductsListView.path,
     ShoppingListView.path,
+    TrendsView.path,
     SettingsView.path,
   ];
 
@@ -34,15 +37,19 @@ class Main extends ConsumerWidget {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.list),
+            icon: Icon(PhosphorIcons.stack),
             label: 'Stock',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shop),
-            label: 'Shopping',
+            icon: Icon(PhosphorIcons.shoppingCartSimple),
+            label: 'Wishes',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
+            icon: Icon(PhosphorIcons.trendUp),
+            label: 'Trends',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(PhosphorIcons.gear),
             label: 'Settings',
           ),
         ],

@@ -5,3 +5,4 @@ part 'entities.g.dart';
 
 part 'product.dart';
 part 'user.dart';
+part 'wishlist.dart';

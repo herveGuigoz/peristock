@@ -9,7 +9,15 @@
       "name": "Main",
       "request": "launch",
       "type": "dart",
-      "program": "lib/main.dart"
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define",
+        "PROJECT_ID=wlbviyweneovmajpgbhw",
+        "--dart-define",
+        "SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsYnZpeXdlbmVvdm1hanBnYmh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzQ0ODE5ODMsImV4cCI6MTk5MDA1Nzk4M30.HKUyN4DITp2-iHvYUHwtmD_682yzF7_fo90w62gNrUI",
+        "--target",
+        "lib/main.dart",
+      ]
     }
   ]
 }

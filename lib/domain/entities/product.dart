@@ -1,15 +1,14 @@
 part of 'entities.dart';
 
-enum QuantityType { qt, g, kg, cl, l }
-
 @freezed
 class Product with _$Product {
   const factory Product({
     required int id,
     required String name,
-    required DateTime bestBeforeDate,
-    required int quantity,
-    required QuantityType quantityType,
+    @Default(1) int quantity,
+    @Default(false) bool isComplete,
+    double? price,
+    DateTime? bestBeforeDate,
     String? image,
   }) = _Product;
 
@@ -23,7 +22,7 @@ class ProductSnapshot with _$ProductSnapshot {
     String? name,
     DateTime? bestBeforeDate,
     @Default(1) quantity,
-    @Default(QuantityType.qt) QuantityType quantityType,
+    @Default(0.0) double price,
     String? image,
   }) = _ProductSnapshot;
 
@@ -33,7 +32,6 @@ class ProductSnapshot with _$ProductSnapshot {
       name: product.name,
       bestBeforeDate: product.bestBeforeDate,
       quantity: product.quantity,
-      quantityType: product.quantityType,
       image: product.image,
     );
   }

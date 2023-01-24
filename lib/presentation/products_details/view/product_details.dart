@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:peristock/application/theme/theme.dart';
 import 'package:peristock/domain/entities/entities.dart';
 import 'package:peristock/presentation/products_details/presenter/product.dart';
 import 'package:peristock/presentation/products_list/presenter/products_list.dart';
 import 'package:peristock/presentation/shared/layouts/layouts.dart';
+import 'package:peristock/presentation/shared/theme/theme.dart';
 import 'package:peristock/presentation/shared/widgets/widgets.dart';
 
 final _product = Provider<Product>(
@@ -61,7 +61,7 @@ class ProductDetailsLayout extends ConsumerWidget {
       body: Container(
         margin: EdgeInsets.all(theme.spacing.regular),
         decoration: BoxDecoration(
-          color: Palette.white,
+          color: theme.palette.primaryContainer,
           borderRadius: BorderRadius.all(theme.radius.regular),
         ),
         child: Column(
@@ -122,7 +122,7 @@ class ProductName extends ConsumerWidget {
 
     return Text(
       product.name,
-      style: TitleTextStyle(
+      style: TextStyle(
         fontSize: 24,
         color: theme.colorScheme.primary,
       ),
@@ -135,11 +135,13 @@ class AddToFavoriteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         minimumSize: const Size.fromHeight(48),
-        backgroundColor: Palette.gray200,
-        foregroundColor: Palette.gray600,
+        backgroundColor: theme.palette.primary,
+        foregroundColor: theme.colorScheme.onPrimary,
       ),
       onPressed: () {},
       child: const AutoSizeText(
@@ -156,11 +158,12 @@ class DeleteButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final product = ref.watch(_product);
+    final theme = Theme.of(context);
 
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         minimumSize: const Size.fromHeight(48),
-        backgroundColor: Palette.red400,
+        backgroundColor: theme.colorScheme.errorContainer,
       ),
       onPressed: () async {
         final result = await ref.watch(
