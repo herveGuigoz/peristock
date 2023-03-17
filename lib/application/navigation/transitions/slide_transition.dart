@@ -17,7 +17,7 @@ class SlideTransitionPage<T> extends CustomTransitionPage<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    const begin = Offset(0, 1);
+    const begin = Offset(1, 0);
     const end = Offset.zero;
     final curve = CurveTween(curve: Curves.ease);
 

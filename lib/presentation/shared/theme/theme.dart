@@ -32,34 +32,33 @@ class AppTheme with _$AppTheme {
 final themeDataProvider = Provider<ThemeData>((ref) {
   final theme = ref.watch(themeProvider);
 
+  final colors = FlexSchemeColor(
+    primary: theme.palette.primary,
+    secondary: theme.palette.primary,
+    tertiary: theme.palette.tertiary,
+    primaryContainer: theme.palette.primaryContainer,
+    secondaryContainer: theme.palette.secondaryContainer,
+  );
+
+  final subThemesData = FlexSubThemesData(
+    defaultRadius: theme.radius.small.x,
+    inputDecoratorFocusedBorderWidth: 1,
+    inputDecoratorBorderWidth: 1,
+    appBarCenterTitle: true,
+  );
+
   return theme.map(
     light: (value) => FlexThemeData.light(
       extensions: [theme.palette, theme.spacing, theme.radius],
       useMaterial3: true,
-      colors: FlexSchemeColor(
-        primary: theme.palette.primary,
-        secondary: theme.palette.primary,
-        tertiary: theme.palette.tertiary,
-        primaryContainer: theme.palette.primaryContainer,
-        secondaryContainer: theme.palette.secondaryContainer,
-      ),
-      subThemesData: FlexSubThemesData(
-        defaultRadius: theme.radius.small.x,
-      ),
+      colors: colors,
+      subThemesData: subThemesData,
     ),
     dark: (value) => FlexThemeData.dark(
       extensions: [theme.palette, theme.spacing, theme.radius],
       useMaterial3: true,
-      colors: FlexSchemeColor(
-        primary: theme.palette.primary,
-        secondary: theme.palette.primary,
-        tertiary: theme.palette.tertiary,
-        primaryContainer: theme.palette.primaryContainer,
-        secondaryContainer: theme.palette.secondaryContainer,
-      ),
-      subThemesData: FlexSubThemesData(
-        defaultRadius: theme.radius.small.x,
-      ),
+      colors: colors,
+      subThemesData: subThemesData,
     ),
   );
 });

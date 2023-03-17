@@ -1,10 +1,10 @@
-class ProductDoesNotExistException implements Exception {
-  ProductDoesNotExistException(this.code);
+class ProductNotFoundException implements Exception {
+  ProductNotFoundException(this.code);
 
   final String code;
 
   @override
-  String toString() => 'Product does not exist ($code)';
+  String toString() => 'Product not found ($code)';
 }
 
 class GetProductsFailure implements Exception {
@@ -35,11 +35,6 @@ class UploadImageFailure implements Exception {
 
   @override
   String toString() => 'An unexpected error occured';
-}
-
-class ServerDownException implements Exception {
-  @override
-  String toString() => 'Server is down';
 }
 
 class InvalidDLCException implements Exception {

@@ -4,7 +4,7 @@ part of 'entities.dart';
 class User with _$User {
   const factory User({
     required String id,
-    required String username,
+    required String email,
     String? avatar,
   }) = _User;
 
@@ -14,7 +14,7 @@ class User with _$User {
 @freezed
 class UserSnapshot with _$UserSnapshot {
   const factory UserSnapshot({
-    required String username,
+    required String email,
   }) = _UserSnapshot;
 
   factory UserSnapshot.fromJson(Map<String, dynamic> json) => _$UserSnapshotFromJson(json);

@@ -13,8 +13,8 @@ class Palette extends ThemeExtension<Palette> {
     this.primary = const Color(0xFF0E1114),
     this.secondary = const Color(0xFF616C76),
     this.tertiary = const Color(0xFF8FA0AF),
-    this.primaryContainer = const Color(0xFFFFFFFF),
-    this.secondaryContainer = const Color(0xFFF8F9FA),
+    this.primaryContainer = const Color(0xFF181C20),
+    this.secondaryContainer = const Color(0xFF0E1114),
   });
 
   const Palette.dark({

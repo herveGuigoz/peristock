@@ -13,7 +13,7 @@ class _LoginFormNotifier extends StateNotifier<LoginState> {
   Future<void> submit() async {
     state = state.copyWith(status: const FormStatus.submissionInProgress());
     try {
-      await sessionRepository.signIn(email: state.email.value, isWeb: false);
+      await sessionRepository.signInWithOtp(email: state.email.value, isWeb: false);
       state = state.copyWith(status: const FormStatus.submissionSucceed());
     } catch (error) {
       state = state.copyWith(status: FormStatus.submissionFailled(error));

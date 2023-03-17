@@ -35,6 +35,8 @@ abstract class FormInput<T> {
   /// [value] is invalid and `null` otherwise.
   String? validator(T value);
 
+  String? get error => isPure ? null : validator(value);
+
   @override
   bool operator ==(covariant FormInput<T> other) {
     if (identical(this, other)) return true;

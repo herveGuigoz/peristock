@@ -1,5 +1,5 @@
 import 'package:peristock/domain/entities/entities.dart';
-import 'package:peristock/domain/ports/user_repository.dart';
+import 'package:peristock/domain/ports/user.dart';
 
 class UserRepository implements UserRepositoryInterface {
   @override

@@ -7,15 +7,13 @@ import 'package:peristock/application/navigation/transitions/fade_transition.dar
 import 'package:peristock/application/navigation/transitions/slide_transition.dart';
 import 'package:peristock/domain/domain.dart';
 import 'package:peristock/presentation/app/presenter/notifier.dart';
-import 'package:peristock/presentation/app/presenter/presenter.dart';
 import 'package:peristock/presentation/app/view/main.dart';
 import 'package:peristock/presentation/login/view/login_view.dart';
-import 'package:peristock/presentation/products_details/view/product_details.dart';
-import 'package:peristock/presentation/products_list/view/products_list.dart';
-import 'package:peristock/presentation/products_upsert/views/product_create.dart';
-import 'package:peristock/presentation/products_upsert/views/product_edit.dart';
+import 'package:peristock/presentation/products/favorite/view/favorite_products.dart';
+import 'package:peristock/presentation/products/search/view/search_view.dart';
 import 'package:peristock/presentation/settings/settings.dart';
-import 'package:peristock/presentation/shopping/views/shopping_list.dart';
+import 'package:peristock/presentation/shopping/items/read/list_items.dart';
+import 'package:peristock/presentation/shopping/lists/read/view/shopping_list.dart';
 import 'package:peristock/presentation/trends/view/trends.dart';
 
 final routerProvider = Provider(
@@ -41,25 +39,18 @@ final routerProvider = Provider(
         routes: [
           GoRoute(
             name: 'ProductList',
-            path: ProductsListView.path,
+            path: '/products',
             pageBuilder: (context, state) => FadeTransitionPage(
               key: state.pageKey,
-              child: const ProductsListView(),
+              child: const FavoriteProductsView(),
             ),
             routes: [
-              GoRoute(
-                name: 'ReadProduct',
-                path: r':id(\d+)',
-                builder: (context, state) => ProductDetailsView(
-                  id: int.parse(state.params['id']!),
-                ),
-              ),
               GoRoute(
                 name: 'CreateProduct',
                 path: 'create',
                 pageBuilder: (context, state) => SlideTransitionPage(
                   key: state.pageKey,
-                  child: const CreateProductView(),
+                  child: Container(),
                 ),
               ),
               GoRoute(
@@ -67,18 +58,27 @@ final routerProvider = Provider(
                 path: 'edit',
                 pageBuilder: (context, state) => SlideTransitionPage(
                   key: state.pageKey,
-                  child: EditProductView(product: state.extra! as Product),
+                  child: Container(),
                 ),
               ),
             ],
           ),
           GoRoute(
             name: 'ShoppingList',
-            path: ShoppingListView.path,
+            path: ShoppingListsView.path,
             pageBuilder: (context, state) => FadeTransitionPage(
               key: state.pageKey,
-              child: const ShoppingListView(),
+              child: const ShoppingListsView(),
             ),
+            routes: [
+              GoRoute(
+                name: 'ReadShoppingList',
+                path: r':id(\d+)',
+                builder: (context, state) => ListItemsView(
+                  id: int.parse(state.params['id']!),
+                ),
+              ),
+            ],
           ),
           GoRoute(
             name: 'Trends',
@@ -118,7 +118,7 @@ final routerProvider = Provider(
 );
 
 class AppStateRefreshStream extends ChangeNotifier {
-  AppStateRefreshStream(Stream<AppState> stream) {
+  AppStateRefreshStream(Stream<AuthenticationStatus> stream) {
     _subscription = stream.asBroadcastStream().listen((_) {
       notifyListeners();
     });

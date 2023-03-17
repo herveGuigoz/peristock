@@ -12,9 +12,9 @@
       "program": "lib/main.dart",
       "args": [
         "--dart-define",
-        "PROJECT_ID=wlbviyweneovmajpgbhw",
+        "PROJECT_ID=abczggppulbwchpgzdzq",
         "--dart-define",
-        "SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsYnZpeXdlbmVvdm1hanBnYmh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzQ0ODE5ODMsImV4cCI6MTk5MDA1Nzk4M30.HKUyN4DITp2-iHvYUHwtmD_682yzF7_fo90w62gNrUI",
+        "SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFiY3pnZ3BwdWxid2NocGd6ZHpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzg1MzQyNjEsImV4cCI6MTk5NDExMDI2MX0.45lb-7yaQpICbrhDbrzll2rPXRr2FQrsalm6qRP352M",
         "--target",
         "lib/main.dart",
       ]

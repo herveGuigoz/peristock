@@ -28,6 +28,8 @@ class FormStatus with _$FormStatus {
   }
 
   bool get isInProgress => this is _InProgress;
+
+  bool get isSucceed => this is _Succeed;
 }
 
 /// Mixin that handles validation.

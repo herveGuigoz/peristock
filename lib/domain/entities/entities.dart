@@ -4,5 +4,6 @@ part 'entities.freezed.dart';
 part 'entities.g.dart';
 
 part 'product.dart';
+part 'session.dart';
 part 'user.dart';
-part 'wishlist.dart';
+part 'shopping.dart';

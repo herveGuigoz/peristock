@@ -1,6 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:peristock/domain/shared/result.dart';
-import 'package:peristock/presentation/app/presenter/presenter.dart';
+import 'package:peristock/presentation/app/presenter/notifier.dart';
 
 abstract class SettingsPresenter {
   // static StateProvider<AppTheme> get theme => themeProvider;

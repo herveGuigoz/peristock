@@ -2,19 +2,23 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:peristock/application/log/log.dart';
+import 'package:peristock/domain/ports/session.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'credentials.dart';
 part 'jwt.dart';
-part 'storage.dart';
+part 'http.freezed.dart';
+part 'http.g.dart';
 
 abstract class HttpClientInterface {
   HttpClientInterface({
+    required String baseURL,
     Map<String, dynamic>? headers,
-  }) : client = Dio()..options = BaseOptions(validateStatus: (_) => true, headers: headers);
+  }) : client = Dio()..options = BaseOptions(baseUrl: baseURL, validateStatus: (_) => true, headers: headers);
 
   @protected
   final Dio client;

@@ -3,12 +3,10 @@ part of 'entities.dart';
 @freezed
 class Product with _$Product {
   const factory Product({
-    required int id,
+    required String id,
     required String name,
-    @Default(1) int quantity,
-    @Default(false) bool isComplete,
-    double? price,
-    DateTime? bestBeforeDate,
+    String? nutriscore,
+    Nutriments? nutriments,
     String? image,
   }) = _Product;
 
@@ -18,11 +16,8 @@ class Product with _$Product {
 @freezed
 class ProductSnapshot with _$ProductSnapshot {
   const factory ProductSnapshot({
-    int? id,
+    String? id,
     String? name,
-    DateTime? bestBeforeDate,
-    @Default(1) quantity,
-    @Default(0.0) double price,
     String? image,
   }) = _ProductSnapshot;
 
@@ -30,9 +25,20 @@ class ProductSnapshot with _$ProductSnapshot {
     return ProductSnapshot(
       id: product.id,
       name: product.name,
-      bestBeforeDate: product.bestBeforeDate,
-      quantity: product.quantity,
       image: product.image,
     );
   }
+}
+
+@freezed
+class Nutriments with _$Nutriments {
+  const factory Nutriments({
+    double? fiber,
+    double? fat,
+    double? saturatedFat,
+    double? salt,
+    double? sugars,
+  }) = _Nutriments;
+
+  factory Nutriments.fromJson(Map<String, dynamic> json) => _$NutrimentsFromJson(json);
 }

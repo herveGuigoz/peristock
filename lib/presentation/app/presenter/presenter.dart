@@ -1,24 +1,29 @@
+import 'dart:developer';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:peristock/application/deep_links/deep_links_observer.dart';
 import 'package:peristock/domain/domain.dart';
-import 'package:peristock/presentation/app/presenter/notifier.dart';
-import 'package:peristock/presentation/di.dart';
 
-typedef AppStateNotifierProvider = StateNotifierProvider<AppStateNotifier, AppState>;
+class AppStateNotifier extends StateNotifier<AuthenticationStatus> with DeepLinkObserverMixin {
+  AppStateNotifier(this._sessionRepository) : super(_sessionRepository.recoverSession()) {
+    startDeeplinkObserver();
+  }
 
-typedef IsAuthenticatedProvider = Provider<bool>;
+  final SessionRepositoryInterface _sessionRepository;
 
-abstract class AppPresenter {
-  static AppStateNotifierProvider get state => _appStateProvider;
+  @override
+  Future<void> handleDeeplink(Uri uri) async {
+    final status = await _sessionRepository.handleDeeplink('$uri');
+    if (status != null) state = status;
+  }
 
-  static IsAuthenticatedProvider get isAuthenticated => _isAuthenticatedProvider;
+  @override
+  void onErrorReceivingDeeplink(String message) {
+    log(message, name: 'onErrorReceivingDeeplink');
+  }
+
+  Future<void> signOut() async {
+    await _sessionRepository.signOut();
+    state = AuthenticationStatus.unauthenticated;
+  }
 }
-
-final _appStateProvider = AppStateNotifierProvider(
-  (ref) => AppStateNotifier(ref.watch(Dependency.sessionRepository)),
-  name: 'AppStateNotifierProvider',
-);
-
-final _isAuthenticatedProvider = Provider<bool>(
-  (ref) => ref.watch(_appStateProvider).status == AuthStatus.authenticated,
-  name: 'IsAuthenticatedProvider',
-);

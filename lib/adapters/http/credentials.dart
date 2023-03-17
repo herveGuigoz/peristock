@@ -1,36 +1,15 @@
 part of 'http.dart';
 
-@immutable
-class Credentials {
-  const Credentials({
-    required this.accessToken,
-    required this.refreshToken,
-  });
+@freezed
+class Credentials with _$Credentials {
+  const factory Credentials({
+    required String accessToken,
+    required String refreshToken,
+  }) = _Credentials;
 
-  factory Credentials.fromJson(Map<String, dynamic> json) {
-    return Credentials(
-      accessToken: json['access_token'] as String,
-      refreshToken: json['refresh_token'] as String,
-    );
-  }
+  factory Credentials.fromJson(Map<String, dynamic> json) => _$CredentialsFromJson(json);
 
-  final String accessToken;
-  final String refreshToken;
+  const Credentials._();
 
   bool get isExpired => JwtDecoder.isExpired(accessToken);
-
-  String toJson() {
-    final json = {'access_token': accessToken, 'refresh_token': refreshToken};
-    return jsonEncode(json);
-  }
-
-  @override
-  bool operator ==(covariant Credentials other) {
-    if (identical(this, other)) return true;
-
-    return other.accessToken == accessToken && other.refreshToken == refreshToken;
-  }
-
-  @override
-  int get hashCode => accessToken.hashCode ^ refreshToken.hashCode;
 }

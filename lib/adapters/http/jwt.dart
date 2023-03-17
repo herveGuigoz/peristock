@@ -1,5 +1,13 @@
 part of 'http.dart';
 
+abstract class CredentialsStorageInterface {
+  Credentials? read();
+
+  Future<void> write(Credentials credentials);
+
+  Future<void> delete();
+}
+
 abstract class JwtInterceptor extends QueuedInterceptor with RefreshTokenMixin {
   JwtInterceptor({
     // required this.refreshTokenURL,
@@ -69,28 +77,27 @@ mixin RefreshTokenMixin {
   @visibleForTesting
   Dio get httpClient;
 
-  final _controller = BehaviorSubject<Credentials?>();
+  final _controller = BehaviorSubject<AuthenticationStatus>();
 
-  Stream<Credentials?> get authenticationStatus {
-    _controller.add(getCredentials());
-    return _controller.stream;
-  }
+  Stream<AuthenticationStatus> get authenticationStatus => _controller.stream;
 
   Credentials? getCredentials() {
-    return _credentials ??= _storage.read();
+    final credentials = _credentials ??= _storage.read();
+
+    return credentials;
   }
 
   /// Save the provided [Credentials].
   Future<void> saveCredentials(Credentials value) async {
     _credentials = value;
     await _storage.write(value);
-    _controller.add(value);
+    _controller.add(AuthenticationStatus.authenticated);
   }
 
   /// Clears [Credentials].
   Future<void> clearCredentials() async {
     _credentials = null;
     await _storage.delete();
-    _controller.add(null);
+    _controller.add(AuthenticationStatus.unauthenticated);
   }
 }

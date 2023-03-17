@@ -1,70 +1,89 @@
 import 'dart:async';
+import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:peristock/adapters/http/http.dart';
 import 'package:peristock/adapters/supabase/supabase.dart';
-import 'package:peristock/domain/exceptions/authentication.dart';
-import 'package:peristock/domain/ports/session_repository.dart';
+import 'package:peristock/domain/ports/session.dart';
 
 class SessionRepository extends SupabaseRepository implements SessionRepositoryInterface {
   SessionRepository();
 
   @override
-  Future<void> signIn({required String email, required bool isWeb}) async {
+  Stream<AuthenticationStatus> onAuthenticationStatusEvents() {
+    return interceptor.authenticationStatus;
+  }
+
+  @override
+  Future<void> signInWithOtp({required String email, required bool isWeb}) async {
     final response = await post<void>(
-      'https://$PROJECT_ID.supabase.co/auth/v1/otp',
+      '/auth/v1/otp',
       queryParameters: {'redirect_to': isWeb ? 'http://localhost:3000' : 'supabase://peristock.io'},
       body: {
         'email': email,
         'create_user': true,
       },
     );
-    
-    
 
     if (response.statusCode != 200) {
-      throw SignInFailure(response);
+      throw SignupError(response);
     }
   }
 
   @override
-  Future<AuthStatus> handleDeeplink(String path) async {
+  AuthenticationStatus recoverSession() {
+    final credentials = getCredentials();
+    
+    return credentials == null ? AuthenticationStatus.unauthenticated : AuthenticationStatus.authenticated;
+  }
+
+  @override
+  Future<AuthenticationStatus> handleDeeplink(String path) async {
     final uri = Uri.parse(path.replaceFirst('#', '?'));
-    if (!uri.queryParameters.containsKey('access_token')) {
-      return AuthStatus.unauthenticated;
-    }
 
     return onReceivedAuthDeeplink(uri);
   }
 
-  Future<AuthStatus> onReceivedAuthDeeplink(Uri uri) async {
+  Future<AuthenticationStatus> onReceivedAuthDeeplink(Uri uri) async {
     final accessToken = uri.queryParameters['access_token'];
     final refreshToken = uri.queryParameters['refresh_token'];
 
     if (accessToken == null || refreshToken == null) {
-      return AuthStatus.unauthenticated;
+      return AuthenticationStatus.unauthenticated;
     }
 
     try {
       final credentials = Credentials(accessToken: accessToken, refreshToken: refreshToken);
-      await interceptor.saveCredentials(credentials);
-      return AuthStatus.authenticated;
+      await saveCredentials(credentials);
+      return AuthenticationStatus.authenticated;
     } catch (error) {
-      return AuthStatus.unauthenticated;
+      return AuthenticationStatus.unauthenticated;
     }
-  }
-
-  @override
-  AuthStatus recoverSession() {
-    final credentials = interceptor.getCredentials();
-    return credentials == null ? AuthStatus.unauthenticated : AuthStatus.authenticated;
   }
 
   @override
   Future<void> signOut() async {
     try {
-      await interceptor.clearCredentials();
+      await clearCredentials();
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);
     }
   }
+
+  Credentials? getCredentials() => interceptor.getCredentials();
+
+  @protected
+  Future<void> saveCredentials(Credentials value) => interceptor.saveCredentials(value);
+
+  @protected
+  Future<void> clearCredentials() => interceptor.clearCredentials();
+}
+
+class SignupError<T> implements Exception {
+  SignupError(this.response);
+
+  final Response<T> response;
+
+  @override
+  String toString() => 'Sign up failed with status code ${response.statusCode}';
 }
