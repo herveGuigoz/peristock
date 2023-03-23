@@ -4,6 +4,7 @@ import 'package:flutter/painting.dart';
 
 class AdaptiveImageProvider extends ImageProvider {
   AdaptiveImageProvider(String url) : _delegate = _resolve(url);
+  
   final ImageProvider _delegate;
 
   static ImageProvider _resolve(String url) {

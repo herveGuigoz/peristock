@@ -1,48 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:peristock/domain/domain.dart';
 import 'package:peristock/presentation/shared/theme/theme.dart';
-import 'package:peristock/presentation/shopping/lists/upsert/presenter/upsert_presenter.dart';
+import 'package:peristock/presentation/shopping/lists/upsert/presenter/form_presenter.dart';
 
 class UpsertListModal extends ConsumerWidget {
-  const UpsertListModal({super.key});
+  const UpsertListModal({
+    super.key,
+    this.instance,
+  });
 
-  static Future<void> show(BuildContext context) {
-    return showDialog<void>(context: context, builder: (_) => const UpsertListModal());
+  static Future<void> show(BuildContext context, {ShoppingList? instance}) {
+    return showDialog<void>(context: context, builder: (_) => UpsertListModal(instance: instance));
   }
+
+  final ShoppingList? instance;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final spacing = theme.spacing.regular;
 
-    ref.listen<UpsertListState>(ShoppingListFormPresenter.state, (curr, next) {
-      if (next.status.isSucceed) {
-        Navigator.of(context).pop();
-      }
-    });
-
-    return Dialog(
-      child: Padding(
-        padding: EdgeInsets.all(theme.spacing.regular),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const ListTile(
-              title: Text('New list'),
-            ),
-            Gap(theme.spacing.regular),
-            const ListNameFormField(),
-            Gap(theme.spacing.regular),
-            const ButtonBar(
+    return ProviderScope(
+      overrides: [
+        listFormNotifierProvider.overrideWith(() => ListFormNotifier(instance)),
+      ],
+      child: FormListener(
+        child: Dialog(
+          child: Padding(
+            padding: EdgeInsets.all(spacing),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                CancelButton(),
-                SubmitButton(),
+                const ListTile(
+                  title: Text('New list'),
+                ),
+                Gap(spacing),
+                const ListNameFormField(),
+                Gap(spacing),
+                const ButtonBar(
+                  children: [
+                    CancelButton(),
+                    SubmitButton(),
+                  ],
+                ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
+  }
+}
+
+class FormListener extends ConsumerWidget {
+  const FormListener({
+    super.key,
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<ShoppingListFormState>(listFormNotifierProvider, (curr, next) {
+      next.status.mapOrNull(
+        submissionSucceed: (value) {
+          Navigator.of(context).pop();
+        },
+        submissionFailled: (value) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.maybeOf(context)?.showSnackBar(SnackBar(content: Text(value.error.toString())));
+        },
+      );
+    });
+
+    return child;
   }
 }
 
@@ -51,17 +85,15 @@ class ListNameFormField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final error = ref.watch(
-      ShoppingListFormPresenter.state.select((value) => value.name.error),
+    final name = ref.watch(
+      listFormNotifierProvider.select((value) => value.name),
     );
 
     return TextFormField(
+      initialValue: name.value,
+      decoration: InputDecoration(labelText: 'Name', errorText: name.error),
       autofocus: true,
-      decoration: InputDecoration(
-        labelText: 'Name',
-        errorText: error,
-      ),
-      onChanged: (value) => ref.read(ShoppingListFormPresenter.state.notifier).updateName(value),
+      onChanged: (value) => ref.read(listFormNotifierProvider.notifier).updateName(value),
     );
   }
 }
@@ -83,9 +115,11 @@ class SubmitButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(listFormNotifierProvider);
+
     return ElevatedButton(
-      onPressed: () => ref.read(ShoppingListFormPresenter.state.notifier).submit(),
-      child: const Text('Create'),
+      onPressed: state.isPure || !state.isValid ? null : () => ref.read(listFormNotifierProvider.notifier).submit(),
+      child: Text(state is CreateShoppingListFormState ? 'Create' : 'Update'),
     );
   }
 }

@@ -3,9 +3,9 @@ part of '../theme.dart';
 @immutable
 class ThemeRadius extends ThemeExtension<ThemeRadius> {
   const ThemeRadius({
-    this.small = const Radius.circular(8),
-    this.regular = const Radius.circular(16),
-    this.big = const Radius.circular(32),
+    this.small = const Radius.circular(10),
+    this.regular = const Radius.circular(12),
+    this.big = const Radius.circular(16),
   });
 
   final Radius small;
@@ -28,9 +28,9 @@ class ThemeRadius extends ThemeExtension<ThemeRadius> {
     }
 
     return ThemeRadius(
-      small: Radius.lerp(small, other.small, t)!,
-      regular: Radius.lerp(regular, other.regular, t)!,
-      big: Radius.lerp(big, other.big, t)!,
+      small: Radius.lerp(small, other.small, t) ?? small,
+      regular: Radius.lerp(regular, other.regular, t) ?? regular,
+      big: Radius.lerp(big, other.big, t) ?? big,
     );
   }
 
@@ -41,6 +41,7 @@ class ThemeRadius extends ThemeExtension<ThemeRadius> {
     return other is ThemeRadius && other.small == small && other.regular == regular && other.big == big;
   }
 
+  // ignore: member-ordering
   @override
   int get hashCode => small.hashCode ^ regular.hashCode ^ big.hashCode;
 }

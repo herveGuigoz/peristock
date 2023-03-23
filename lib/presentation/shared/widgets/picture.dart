@@ -30,8 +30,8 @@ class Picture extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        constraints: BoxConstraints.tight(size),
         decoration: decoration,
+        constraints: BoxConstraints.tight(size),
         child: ClipRRect(
           borderRadius: borderRadius,
           child: image == null

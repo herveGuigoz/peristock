@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:peristock/domain/entities/entities.dart';
+
 enum AuthenticationStatus { authenticated, unauthenticated }
 
 abstract class SessionRepositoryInterface {
@@ -12,6 +16,9 @@ abstract class SessionRepositoryInterface {
 
   /// Recover/refresh session if it's available.
   AuthenticationStatus recoverSession();
+
+  /// Get the current user.
+  FutureOr<User> getCurrentUser();
 
   /// Method to do sign out.
   Future<void> signOut();

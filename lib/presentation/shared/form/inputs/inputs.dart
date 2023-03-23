@@ -1,61 +1,39 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of '../form.dart';
 
-enum FormInputStatus {
-  /// The form input has not been touched.
-  pure,
-
-  /// The form input is valid.
-  valid,
-
-  /// The form input is not valid.
-  invalid,
-}
-
-@immutable
-abstract class FormInput<T> {
-  const FormInput(
-    T value, {
-    bool isPure = false,
-  }) : this._(value, isPure: isPure);
-
-  const FormInput._(this.value, {this.isPure = true});
-
-  const FormInput.initial(T value) : this._(value);
-
-  /// The value of the given [FormInput].
-  /// For example, if you have a `FormInput` for `FirstName`,
-  /// the value could be 'Joe'.
-  final T value;
-
-  /// If the input has been modified.
-  final bool isPure;
-
-  /// A function that must return a validation error if the provided
-  /// [value] is invalid and `null` otherwise.
-  String? validator(T value);
-
-  String? get error => isPure ? null : validator(value);
+class EmailInput extends FormInput<String> with EmailValidator {
+  const EmailInput({
+    super.value = '',
+    super.isPure = true,
+    this.message = 'This value is not a valid email address.',
+  });
 
   @override
-  bool operator ==(covariant FormInput<T> other) {
-    if (identical(this, other)) return true;
+  final String message;
 
-    return other.value == value && other.isPure == isPure;
+  EmailInput copyWith({required String value}) {
+    return EmailInput(value: value, isPure: false, message: message);
   }
-
-  @override
-  int get hashCode => value.hashCode ^ isPure.hashCode;
-
-  @override
-  String toString() => '$runtimeType(value: $value, isValid: $isValid)';
 }
 
-extension FormInputExtension<T> on FormInput<T> {
-  /// Whether the [FormInput] value is valid according to the
-  /// overridden `validator`.
-  bool get isValid => validator(value) == null;
+class PasswordInput extends FormInput<String> with RegexValidator {
+  const PasswordInput({
+    super.value = '',
+    super.isPure = true,
+    this.message = 'Password must be at least 8 characters long and contain at least one letter and one number.',
+  });
 
-  /// Whether the [FormInput] value is not valid.
-  bool get invalid => !isValid;
+  @override
+  final String message;
+
+  /// ^ - matches the start of the string.
+  /// (?=.*[A-Za-z]) - positive lookahead to ensure that there is at least one letter in the string.
+  /// (?=.*\d) - positive lookahead to ensure that there is at least one number in the string.
+  /// [\S]{8,} - matches any combination of letters and numbers that is at least 8 characters long.
+  /// $ - matches the end of the string.
+  @override
+  String get pattern => r'^(?=.*[A-Za-z])(?=.*\d)[\S]{8,}$';
+
+  PasswordInput copyWith({required String value}) {
+    return PasswordInput(value: value, isPure: false, message: message);
+  }
 }

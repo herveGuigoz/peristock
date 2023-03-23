@@ -1,7 +1,7 @@
 import 'package:peristock/domain/entities/entities.dart';
 
 abstract class ProductRepositoryInterface {
-  Future<Product> searchProductByCode(String barcode);
+  Future<ProductSnapshot> searchProductByCode(String barcode);
 
-  Future<List<Product>> searchProductsByName(String input);
+  Future<List<ProductSnapshot>> searchProductsByName(String input, {ProductFilters? filters});
 }

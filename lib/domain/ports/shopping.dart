@@ -3,13 +3,21 @@ import 'dart:async';
 import 'package:peristock/domain/entities/entities.dart';
 
 abstract class ShoppingRepositoryInterface {
-  FutureOr<List<ShoppingList>> findAll();
+  Future<List<ShoppingList>> getListsCollection();
 
-  FutureOr<void> createList(ShoppingListSnapshot snapshot);
+  FutureOr<ShoppingList> getListById(int id);
+
+  FutureOr<ShoppingList> createList(ShoppingListSnapshot snapshot);
 
   FutureOr<ShoppingList> updateList(ShoppingListSnapshot snapshot);
 
-  FutureOr<void> addItem(ListItemSnapshot snapshot);
+  FutureOr<void> deleteList(ShoppingList item);
 
-  FutureOr<void> deleteList(ShoppingList list);
+  FutureOr<ListItem> getListItemById(int id);
+
+  FutureOr<void> createListItem(ListItemSnapshot snapshot);
+
+  FutureOr<void> updateListItem(ListItemSnapshot snapshot);
+
+  FutureOr<void> deleteListItem(ListItem item);
 }

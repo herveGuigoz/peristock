@@ -10,7 +10,7 @@ class ProductNotFoundException implements Exception {
 class GetProductsFailure implements Exception {
   const GetProductsFailure(this.error);
 
-  /// Original faillure for debug
+  /// Original faillure for debug.
   final Object error;
 
   @override
@@ -20,7 +20,7 @@ class GetProductsFailure implements Exception {
 class SaveProductFailure implements Exception {
   const SaveProductFailure(this.error);
 
-  /// Original faillure for debug
+  /// Original faillure for debug.
   final Object error;
 
   @override
@@ -30,7 +30,7 @@ class SaveProductFailure implements Exception {
 class UploadImageFailure implements Exception {
   UploadImageFailure(this.error);
 
-  /// Original faillure for debug
+  /// Original faillure for debug.
   final Object error;
 
   @override

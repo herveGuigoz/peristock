@@ -20,14 +20,12 @@ class Thumbnail extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      constraints: BoxConstraints.tight(size),
       decoration: BoxDecoration(
         color: theme.colorScheme.primary.withOpacity(0.1),
         borderRadius: borderRadius ?? BorderRadius.all(theme.radius.small),
       ),
-      child: Center(
-        child: child,
-      ),
+      constraints: BoxConstraints.tight(size),
+      child: Center(child: child),
     );
   }
 }

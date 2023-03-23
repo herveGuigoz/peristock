@@ -1,11 +1,13 @@
 part of 'entities.dart';
 
+enum Nutriscore { a, b, c, d, e }
+
 @freezed
 class Product with _$Product {
   const factory Product({
-    required String id,
     required String name,
-    String? nutriscore,
+    String? barecode,
+    Nutriscore? nutriscore,
     Nutriments? nutriments,
     String? image,
   }) = _Product;
@@ -16,18 +18,14 @@ class Product with _$Product {
 @freezed
 class ProductSnapshot with _$ProductSnapshot {
   const factory ProductSnapshot({
-    String? id,
     String? name,
+    String? barecode,
+    Nutriscore? nutriscore,
+    Nutriments? nutriments,
     String? image,
   }) = _ProductSnapshot;
 
-  factory ProductSnapshot.fromDomain(Product product) {
-    return ProductSnapshot(
-      id: product.id,
-      name: product.name,
-      image: product.image,
-    );
-  }
+  factory ProductSnapshot.fromJson(Map<String, dynamic> json) => _$ProductSnapshotFromJson(json);
 }
 
 @freezed
@@ -41,4 +39,15 @@ class Nutriments with _$Nutriments {
   }) = _Nutriments;
 
   factory Nutriments.fromJson(Map<String, dynamic> json) => _$NutrimentsFromJson(json);
+}
+
+@freezed
+class ProductFilters with _$ProductFilters {
+  const factory ProductFilters({
+    String? brand,
+    String? store,
+    Nutriscore? nutriscore,
+  }) = _ProductFilters;
+
+  factory ProductFilters.fromJson(Map<String, dynamic> json) => _$ProductFiltersFromJson(json);
 }

@@ -5,8 +5,8 @@ class ShoppingList with _$ShoppingList {
   const factory ShoppingList({
     required int id,
     required String name,
+    required List<ListItem> listItems,
     required DateTime createdAt,
-    required List<ListItem> items,
   }) = _ShoppingList;
 
   factory ShoppingList.fromJson(Map<String, dynamic> json) => _$ShoppingListFromJson(json);
@@ -27,9 +27,10 @@ class ShoppingListSnapshot with _$ShoppingListSnapshot {
 class ListItem with _$ListItem {
   const factory ListItem({
     required int id,
-    required String name,
+    required int listId,
+    required Product product,
+    required int quantity,
     required bool completed,
-    int? quantity,
     double? price,
   }) = _ListItem;
 
@@ -41,11 +42,22 @@ class ListItemSnapshot with _$ListItemSnapshot {
   const factory ListItemSnapshot({
     required int listId,
     int? id,
-    String? name,
-    bool? completed,
+    Product? product,
     int? quantity,
+    bool? completed,
     double? price,
   }) = _ListItemSnapshot;
+
+  factory ListItemSnapshot.fromEntity(ListItem entity) {
+    return ListItemSnapshot(
+      listId: entity.listId,
+      id: entity.id,
+      product: entity.product,
+      quantity: entity.quantity,
+      completed: entity.completed,
+      price: entity.price,
+    );
+  }
 
   factory ListItemSnapshot.fromJson(Map<String, dynamic> json) => _$ListItemSnapshotFromJson(json);
 }

@@ -9,15 +9,15 @@ extension DateTimeTimeExtension on DateTime {
   /// DateTime object.
   DateTime operator -(Duration duration) => subtract(duration);
 
-  /// Returns only year, month and day
+  /// Returns only year, month and day.
   DateTime get asDay => DateTime(year, month, day);
 
-  /// Returns if today, true
+  /// Returns if today, true.
   bool get isToday {
     return _calculateDifference(this) == 0;
   }
 
-  /// Returns if tomorrow, true
+  /// Returns if tomorrow, true.
   bool get isTomorrow {
     return _calculateDifference(this) == 1;
   }
@@ -49,6 +49,7 @@ extension DateTimeTimeExtension on DateTime {
 
   int _calculateDifference(DateTime date) {
     final now = DateTime.now();
+    
     return DateTime(date.year, date.month, date.day).difference(DateTime(now.year, now.month, now.day)).inDays;
   }
 
@@ -60,19 +61,19 @@ extension DateTimeTimeExtension on DateTime {
 }
 
 extension NumTimeExtension<T extends num> on T {
-  /// Returns a Duration represented in days
+  /// Returns a Duration represented in days.
   Duration get days => milliseconds * Duration.millisecondsPerDay;
 
-  /// Returns a Duration represented in hours
+  /// Returns a Duration represented in hours.
   Duration get hours => milliseconds * Duration.millisecondsPerHour;
 
-  /// Returns a Duration represented in minutes
+  /// Returns a Duration represented in minutes.
   Duration get minutes => milliseconds * Duration.millisecondsPerMinute;
 
-  /// Returns a Duration represented in seconds
+  /// Returns a Duration represented in seconds.
   Duration get seconds => milliseconds * Duration.millisecondsPerSecond;
 
-  /// Returns a Duration represented in milliseconds
+  /// Returns a Duration represented in milliseconds.
   Duration get milliseconds {
     return Duration(
       microseconds: (this * Duration.microsecondsPerMillisecond).toInt(),

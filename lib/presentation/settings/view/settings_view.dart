@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:peristock/application/di.dart';
 import 'package:peristock/presentation/settings/presenter/presenter.dart';
-import 'package:peristock/presentation/shared/theme/theme.dart';
+import 'package:peristock/presentation/shared/layouts/layouts.dart';
+
+final userProvider = FutureProvider((ref) async => ref.read(Dependency.sessionRepository).getCurrentUser());
 
 class SettingsView extends ConsumerWidget {
   const SettingsView({super.key});
 
-  static const String path = '/settings';
+  static const String name = 'Settings';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
+    final user = ref.watch(userProvider);
+
+    return user.when(
+      data: (value) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Settings'),
+        ),
+        body: const SettingsLayout(),
       ),
-      body: const SettingsLayout(),
+      error: ErrorLayout.new,
+      loading: LoadingLayout.new,
     );
   }
 }
@@ -24,29 +33,19 @@ class SettingsLayout extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
+
     return ListTileTheme(
       dense: true,
       child: ListView(
-        children: const [
-          ThemeSetting(),
-          LogOutButton(),
+        children: [
+          ListTile(
+            title: const Text('Email'),
+            subtitle: Text(user.requireValue.email),
+          ),
+          const LogOutButton(),
         ],
       ),
-    );
-  }
-}
-
-class ThemeSetting extends ConsumerWidget {
-  const ThemeSetting({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeProvider);
-
-    return SwitchListTile(
-      value: theme is LightTheme,
-      title: const Text('Dark Theme'),
-      onChanged: (isDark) => ref.read(themeProvider.notifier).state = isDark ? const DarkTheme() : const LightTheme(),
     );
   }
 }
@@ -57,8 +56,8 @@ class LogOutButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
-      onTap: () => SettingsPresenter.logOut(ref),
       title: const Text('Log out'),
+      onTap: () => SettingsPresenter.logOut(ref),
     );
   }
 }

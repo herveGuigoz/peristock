@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:peristock/presentation/shared/theme/theme.dart';
 
 const _linearGradient = LinearGradient(
-  colors: [Color(0xFFEBEBF4), Color(0xFFF4F4F4), Color(0xFFEBEBF4)],
-  stops: [0.1, 0.3, 0.4],
   begin: Alignment(-1, -0.3),
   end: Alignment(1, 0.3),
+  colors: [Color(0xFFEBEBF4), Color(0xFFF4F4F4), Color(0xFFEBEBF4)],
+  stops: [0.1, 0.3, 0.4],
 );
 
 class Shimmer extends StatefulWidget {
@@ -33,10 +33,10 @@ class ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
 
   Gradient get gradient {
     return LinearGradient(
-      colors: widget.linearGradient.colors,
-      stops: widget.linearGradient.stops,
       begin: widget.linearGradient.begin,
       end: widget.linearGradient.end,
+      colors: widget.linearGradient.colors,
+      stops: widget.linearGradient.stops,
       transform: _SlidingGradientTransform(slidePercent: _controller.value),
     );
   }
@@ -64,6 +64,7 @@ class ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
     Offset offset = Offset.zero,
   }) {
     final shimmerBox = context.findRenderObject()! as RenderBox;
+
     return descendant.localToGlobal(offset, ancestor: shimmerBox);
   }
 
@@ -110,8 +111,9 @@ class _ShimmerLoadingState extends State<ShimmerLoading> {
 
   void _onShimmerChange() {
     if (widget.isLoading) {
+      // ignore: no-empty-block
       setState(() {
-        // update the shimmer painting.
+        // Update the shimmer painting.
       });
     }
   }
@@ -136,17 +138,12 @@ class _ShimmerLoadingState extends State<ShimmerLoading> {
     );
 
     return ShaderMask(
-      blendMode: BlendMode.srcATop,
       shaderCallback: (bounds) {
         return gradient.createShader(
-          Rect.fromLTWH(
-            -offsetWithinShimmer.dx,
-            -offsetWithinShimmer.dy,
-            shimmerSize.width,
-            shimmerSize.height,
-          ),
+          Rect.fromLTWH(-offsetWithinShimmer.dx, -offsetWithinShimmer.dy, shimmerSize.width, shimmerSize.height),
         );
       },
+      blendMode: BlendMode.srcATop,
       child: widget.child,
     );
   }
@@ -168,8 +165,8 @@ class ShimmerListView extends StatelessWidget {
     return Shimmer(
       child: ListView.builder(
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: itemCount,
         itemBuilder: (context, index) => ShimmerListTile(borderRadius: borderRadius),
+        itemCount: itemCount,
       ),
     );
   }

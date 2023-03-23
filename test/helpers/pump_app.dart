@@ -13,12 +13,9 @@ extension PumpApp on WidgetTester {
       ProviderScope(
         overrides: overrides,
         child: MaterialApp(
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-          ],
-          supportedLocales: AppLocalizations.supportedLocales,
           home: widget,
+          localizationsDelegates: const [AppLocalizations.delegate, GlobalMaterialLocalizations.delegate],
+          supportedLocales: AppLocalizations.supportedLocales,
         ),
       ),
     );

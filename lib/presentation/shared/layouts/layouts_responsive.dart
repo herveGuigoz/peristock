@@ -3,7 +3,7 @@ part of 'layouts.dart';
 /// Signature for the individual builders (`phone`, `tablet`, etc.).
 typedef ResponsiveLayoutWidgetBuilder = Widget Function(BuildContext, Widget?);
 
-/// Namespace for Default Breakpoints
+/// Namespace for Default Breakpoints.
 abstract class Breakpoints {
   /// Max width for a phone layout.
   static const double phone = 768;
@@ -19,8 +19,8 @@ abstract class Breakpoints {
 /// various responsive breakpoints.
 class ResponsiveLayoutBuilder extends StatelessWidget {
   const ResponsiveLayoutBuilder({
-    super.key,
     required this.phone,
+    super.key,
     this.tablet,
     this.laptop,
     this.child,

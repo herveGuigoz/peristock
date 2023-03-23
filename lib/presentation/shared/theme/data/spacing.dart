@@ -36,9 +36,9 @@ class Spacing extends ThemeExtension<Spacing> {
     }
 
     return Spacing(
-      small: ui.lerpDouble(small, other.small, t)!,
-      regular: ui.lerpDouble(regular, other.regular, t)!,
-      big: ui.lerpDouble(big, other.big, t)!,
+      small: ui.lerpDouble(small, other.small, t) ?? small,
+      regular: ui.lerpDouble(regular, other.regular, t) ?? regular,
+      big: ui.lerpDouble(big, other.big, t) ?? big,
     );
   }
 
@@ -49,6 +49,7 @@ class Spacing extends ThemeExtension<Spacing> {
     return other is Spacing && other.small == small && other.regular == regular && other.big == big;
   }
 
+  // ignore: member-ordering
   @override
   int get hashCode => small.hashCode ^ regular.hashCode ^ big.hashCode;
 }

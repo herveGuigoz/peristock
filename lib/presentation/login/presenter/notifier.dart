@@ -7,7 +7,8 @@ class _LoginFormNotifier extends StateNotifier<LoginState> {
   final SessionRepositoryInterface sessionRepository;
 
   void setEmail(String value) {
-    state = state.copyWith(email: Email(value));
+    final email = state.email.copyWith(value: value);
+    state = state.copyWith(email: email);
   }
 
   Future<void> submit() async {

@@ -4,7 +4,7 @@ import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:peristock/presentation/login/presenter/presenter.dart' hide Email;
+import 'package:peristock/presentation/login/presenter/presenter.dart';
 import 'package:peristock/presentation/shared/shared.dart';
 import 'package:peristock/presentation/shared/theme/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -59,6 +59,10 @@ class LoginView extends ConsumerWidget {
 class EmailInput extends ConsumerWidget {
   const EmailInput({super.key});
 
+  void _onEmailChanged(WidgetRef ref, String email) {
+    ref.read(LoginFormPresenter.state.notifier).setEmail(email);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
@@ -77,12 +81,10 @@ class EmailInput extends ConsumerWidget {
         ),
         Gap(theme.spacing.small),
         TextFormField(
+          decoration: const InputDecoration(hintText: 'Email'),
           keyboardType: TextInputType.emailAddress,
           readOnly: isInProgress,
-          onChanged: (email) {
-            ref.read(LoginFormPresenter.state.notifier).setEmail(email);
-          },
-          decoration: const InputDecoration(hintText: 'Email'),
+          onChanged: (email) => _onEmailChanged(ref, email),
         ),
       ],
     );
@@ -102,9 +104,6 @@ class SendEmailButton extends ConsumerWidget {
     );
 
     return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        minimumSize: const Size.fromHeight(56),
-      ),
       onPressed: isFormValid ? () => ref.read(LoginFormPresenter.state.notifier).submit() : null,
       child: Text(
         state.status.maybeWhen(
@@ -120,7 +119,7 @@ class SendEmailButton extends ConsumerWidget {
 class SuccessModal extends ConsumerWidget {
   const SuccessModal({super.key});
 
-  static Future<void> show(BuildContext context) async {
+  static Future<void> show(BuildContext context) {
     return showDialog(context: context, builder: (_) => const SuccessModal());
   }
 

@@ -1,70 +1,74 @@
 import 'dart:ui' as ui show lerpDouble;
 
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 part 'data/colors.dart';
+part 'data/material.dart';
 part 'data/radius.dart';
 part 'data/spacing.dart';
-part 'theme.freezed.dart';
+part 'data/typography.dart';
 
-final themeProvider = StateProvider<AppTheme>(
-  (ref) => const AppTheme.light(),
-);
+final themeProvider = Provider((_) => const LightTheme());
 
-@freezed
-class AppTheme with _$AppTheme {
-  const factory AppTheme.light({
-    @Default(Palette.light()) Palette palette,
-    @Default(Spacing()) Spacing spacing,
-    @Default(ThemeRadius()) ThemeRadius radius,
-  }) = LightTheme;
+abstract class AppTheme {
+  const AppTheme({
+    required this.radius,
+    required this.spacing,
+    required this.colorScheme,
+    required this.appBarIconColor,
+    required this.tabLabelColor,
+    required this.tabUnselectedLabelColor,
+    required this.bottomNavigationBarUnselectedColor,
+  });
 
-  const factory AppTheme.dark({
-    @Default(Palette.dark()) Palette palette,
-    @Default(Spacing()) Spacing spacing,
-    @Default(ThemeRadius()) ThemeRadius radius,
-  }) = DarkTheme;
+  /// The radius values for the application.
+  final ThemeRadius radius;
+
+  /// The spacing values for the application.
+  final Spacing spacing;
+
+  /// The color scheme for the application.
+  final ColorScheme colorScheme;
+
+  /// The color of the app bar's icon.
+  final Color appBarIconColor;
+
+  /// The color of the tab bar's selected label.
+  final Color tabLabelColor;
+
+  /// The color of the tab bar's unselected label.
+  final Color tabUnselectedLabelColor;
+
+  /// The color of the bottom navigation bar's unselected item.
+  final Color bottomNavigationBarUnselectedColor;
+
+  ThemeData get materialTheme;
 }
 
-final themeDataProvider = Provider<ThemeData>((ref) {
-  final theme = ref.watch(themeProvider);
-
-  final colors = FlexSchemeColor(
-    primary: theme.palette.primary,
-    secondary: theme.palette.primary,
-    tertiary: theme.palette.tertiary,
-    primaryContainer: theme.palette.primaryContainer,
-    secondaryContainer: theme.palette.secondaryContainer,
-  );
-
-  final subThemesData = FlexSubThemesData(
-    defaultRadius: theme.radius.small.x,
-    inputDecoratorFocusedBorderWidth: 1,
-    inputDecoratorBorderWidth: 1,
-    appBarCenterTitle: true,
-  );
-
-  return theme.map(
-    light: (value) => FlexThemeData.light(
-      extensions: [theme.palette, theme.spacing, theme.radius],
-      useMaterial3: true,
-      colors: colors,
-      subThemesData: subThemesData,
+class LightTheme extends AppTheme with MaterialThemeMixin {
+  const LightTheme({
+    super.radius = const ThemeRadius(),
+    super.spacing = const Spacing(),
+    super.colorScheme = const ColorScheme(
+      brightness: Brightness.light,
+      primary: Color(0xFFC80C0F),
+      onPrimary: Color(0XFFFFFFFF),
+      secondary: Color(0xFFD75053),
+      onSecondary: Color(0XFFFFFFFF),
+      tertiary: Palette.gray700,
+      onTertiary: Color(0XFFFFFFFF),
+      error: Color(0xFFBA1A1A),
+      onError: Color(0xFFFFFFFF),
+      background: Color(0xFFFFFFFF),
+      onBackground: Palette.gray700,
+      surface: Palette.gray100,
+      onSurface: Palette.gray700,
     ),
-    dark: (value) => FlexThemeData.dark(
-      extensions: [theme.palette, theme.spacing, theme.radius],
-      useMaterial3: true,
-      colors: colors,
-      subThemesData: subThemesData,
-    ),
-  );
-});
-
-extension ThemeExtensionsProvider on ThemeData {
-  Palette get palette => extension<Palette>()!;
-  Spacing get spacing => extension<Spacing>()!;
-  ThemeRadius get radius => extension<ThemeRadius>()!;
+    super.appBarIconColor = Palette.gray500,
+    super.tabLabelColor = const Color(0xFF272728),
+    super.tabUnselectedLabelColor = Palette.gray300,
+    super.bottomNavigationBarUnselectedColor = Palette.gray500,
+  });
 }
